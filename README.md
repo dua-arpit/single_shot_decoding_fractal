@@ -7,14 +7,14 @@ There are two important files.
 
 2) The main.cpp executes the decoder via the function sweep_decoder_run. The function sweep_decoder_run takes in the following arguments: 
 
-a) level= level of the fractal lattice. level 0 corresponds to the 3D surface code. 
+    a) level= level of the fractal lattice. level 0 corresponds to the 3D surface code. 
 
-b) sweepSchedule= a schedule of sweep directions. 
+    b) sweepSchedule= a schedule of sweep directions. 
 
-c) rounds= number of rounds of error correction. 
+    c) rounds= number of rounds of error correction. 
 
-d) L= system size.
+    d) L= system size.
 
-e) p=physical error rate.
+    e) p=physical error rate.
 
-f) q=measurement error rate.
+    f) q=measurement error rate.
