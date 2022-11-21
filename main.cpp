@@ -9,9 +9,13 @@ int main(int argc, char *argv[])
     int L=std::atoi(argv[4]); 
     const double p=std::atof(argv[5]);
     const double q=std::atof(argv[6]);
+    // int maxruns_id=std::atoi(argv[7]);
+    int seed=std::atoi(argv[7]);
 
-    for(int i=0;i<20;++i)
-        std::cout<<sweep_decoder_run(level,sweepSchedule,rounds,L,p,q)<<std::endl;
+    //pcg_extras::seed_seq_from<std::random_device> seed;
+    pcg32 rnEngine(seed);
+
+    std::cout<<sweep_decoder_run(level,sweepSchedule,rounds,L,p,q,rnEngine)<<std::endl;
 
     return 0;
 }
