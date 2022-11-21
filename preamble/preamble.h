@@ -11,6 +11,8 @@
 #include <string>
 #include <iomanip>
 #include <numeric>
+#define __STDC_LIMIT_MACROS
+#include <stdint.h>
 #include "pcg_random.hpp"
 #include "pcg_uint128.hpp"
 #include "pcg_extras.hpp"
@@ -19,16 +21,16 @@ pcg_extras::seed_seq_from<std::random_device> seed;
 pcg32 rnEngine(seed);
 // std::default_random_engine rnEngine;
 std::uniform_real_distribution<double> distDouble0To1(0,nextafter(1,2));
-std::uniform_int_distribution<int> distInt0To2(0,2);
-std::uniform_int_distribution<int> distInt0To1(0,1);
+std::uniform_int_distribution<int_fast64_t> distInt0To2(0,2);
+std::uniform_int_distribution<int_fast64_t> distInt0To1(0,1);
 
-typedef std::vector<int> vint;
+typedef std::vector<int_fast64_t> vint;
 typedef std::vector<double> vdbl;
 typedef std::vector<vint> vvint;
 typedef std::vector<vvint> vvvint;
-typedef std::vector<std::pair<int,int>> vpint;
+typedef std::vector<std::pair<int_fast64_t,int_fast64_t>> vpint;
 typedef std::vector<std::string> vstr;
-typedef std::set <int> sint;
+typedef std::set <int_fast64_t> sint;
 
 template <typename IntType>
 std::vector<IntType> range(IntType start, IntType stop, IntType step)
@@ -66,18 +68,25 @@ bool Type_in_vType(std::vector<Type> vec,Type intg)
     return (std::find(vec.begin(),vec.end(),intg) != vec.end());
 }
 
-int fmod(const int input, const int ceil) {
+template <typename Type>
+bool Type_notin_vType(std::vector<Type> vec,Type intg)
+{
+    return (std::find(vec.begin(),vec.end(),intg) == vec.end());
+}
+
+int_fast64_t fmod(const int_fast64_t input, const int_fast64_t ceil) 
+{
     // apply the modulo operator only when needed
     // (i.e. when the input is greater than the ceiling)
     return input >= ceil ? input % ceil : input;
     // NB: the assumption here is that the numbers are positive
 }
 
-int mod(int a,int b)
+int_fast64_t mod(int_fast64_t a,int_fast64_t b)
 {
     //we assume a<1000000*b
     if (a<0)
-        return fmod(10000000*b+a,b);
+        return fmod(abs(a)*b+a,b);
     else 
         return fmod(a,b);
 }
@@ -87,10 +96,10 @@ bool one_in_vector(vint vec)
     return (std::find(vec.begin(),vec.end(),1)!=vec.end());
 }
 
-int countone_in_vector(vint vec)
+int_fast64_t countone_in_vector(vint vec)
 {
-    int count=0;
-    for(int i=0; i<vec.size();++i)
+    int_fast64_t count=0;
+    for(int_fast64_t i=0; i<vec.size();++i)
     {
         if (vec[i]==1)
         {
@@ -100,13 +109,13 @@ int countone_in_vector(vint vec)
     return count;
 }
 
-int mod2dot_fun(vint logical,vint error)
+int_fast64_t mod2dot_fun(vint logicalcoords,vint error)
 {
-    int count=0;
-    for(int i=0;i<logical.size();++i)
+    int_fast64_t count=0;
+    for(int_fast64_t i=0;i<logicalcoords.size();++i)
     {
-        if(logical[i]==1 and error[i]==1) 
-            count=fmod((count+1),2);
+        if(error[logicalcoords[i]]==1) 
+            count=fmod(count+1,2);
     }
     return count;
 }
@@ -114,7 +123,7 @@ int mod2dot_fun(vint logical,vint error)
 vint sum_arr(vint a,vint b)
 {
     vint c;
-    for(int i=0; i<a.size();++i)
+    for(int_fast64_t i=0; i<a.size();++i)
     {
         c.push_back(a[i]+b[i]);
     }
@@ -122,10 +131,10 @@ vint sum_arr(vint a,vint b)
 }
 
 
-vint sum_arr_mod(int L,vint a,vint b)
+vint sum_arr_mod(int_fast64_t L,vint a,vint b)
 {
     vint c;
-    for(int i=0; i<a.size();++i)
+    for(int_fast64_t i=0; i<a.size();++i)
     {
         c.push_back(fmod((a[i]+b[i]),2*L));
     }
@@ -135,7 +144,7 @@ vint sum_arr_mod(int L,vint a,vint b)
 vint subtract_arr(vint a,vint b)
 {
     vint c;
-    for(int i=0; i<a.size();++i)
+    for(int_fast64_t i=0; i<a.size();++i)
     {
         c.push_back(a[i]-b[i]);
     }
@@ -144,19 +153,44 @@ vint subtract_arr(vint a,vint b)
 vint mul_arr(vint a,vint b)
 {
     vint c;
-    for(int i=0; i<a.size();++i)
+    for(int_fast64_t i=0; i<a.size();++i)
     {
         c.push_back(a[i]*b[i]);
     }
     return c;
 }
 
-vint vectimesc(int k,vint v)
+vint vectimesc(int_fast64_t k,vint v)
 {
 	vint vk;
-    for(int x:v)
+    for(int_fast64_t x:v)
     {
         vk.push_back(x*k);
     }
     return vk;
+}
+
+void updateset(sint& set,int position)
+{
+    auto it = set.find(position);
+    if (it == set.end())
+    {
+        set.insert(position);
+    }
+    else
+    {
+        set.erase(it);
+    }
+}
+
+void tests()
+{
+    vint a{1,0,0,1};
+    vint b{0,1,0,1};
+    vint c{0,0,0,0};
+    
+    assert(mod2dot_fun(a,b)==1);
+    assert(one_in_vector(a)==true);
+    assert(one_in_vector(b)==true);
+    assert(one_in_vector(c)==false);
 }
