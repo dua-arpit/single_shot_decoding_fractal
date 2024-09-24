@@ -17,5 +17,5 @@ int main(int argc, char *argv[])
     // Execute sweep decoder and print the result
     std::cout << sweep_decoder_run(level, sweepSchedule, rounds, L, p, q, rnEngine) << std::endl;
 
-    return 0; // Indicate successful execution
+    return 0;
 }
