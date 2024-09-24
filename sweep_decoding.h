@@ -40,12 +40,12 @@ struct lattice lattice_fun(int_fast64_t L)
                 //Add vertices where all coordinates are odd
                 if (fmod(x, 2) == 1 && fmod(y, 2) == 1 && fmod(z, 2) == 1)
                     lat.vertices.push_back(coordinate(L, vec));
-                //Add faces based on coordinate parity
+                //Faces are defined using parity of coordinates below
                 if ((fmod(x, 2) == 0 && fmod(y, 2) == 0 && fmod(z, 2) == 1) ||
                     (fmod(x, 2) == 0 && fmod(y, 2) == 1 && fmod(z, 2) == 0) ||
                     (fmod(x, 2) == 1 && fmod(y, 2) == 0 && fmod(z, 2) == 0))
                     lat.faces.push_back(coordinate(L, vec));
-                //Add edges and logical coordinates based on parity
+                //Add edges and coordinates of the logical operator 
                 if ((fmod(x, 2) == 1 && fmod(y, 2) == 1 && fmod(z, 2) == 0) ||
                     (fmod(x, 2) == 1 && fmod(y, 2) == 0 && fmod(z, 2) == 1) ||
                     (fmod(x, 2) == 0 && fmod(y, 2) == 1 && fmod(z, 2) == 1))
@@ -54,7 +54,7 @@ struct lattice lattice_fun(int_fast64_t L)
                     if (x == 1 && y == 1) //Mark logical coordinates
                         lat.logicalcoords.push_back(coordinate(L, vec));
                 }
-                //Add cubes where all coordinates are even
+                //Cubes are defined by all coordinates being even
                 if (fmod(x, 2) == 0 && fmod(y, 2) == 0 && fmod(z, 2) == 0)
                     lat.cubes.push_back(coordinate(L, vec));
             }
