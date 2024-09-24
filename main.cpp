@@ -1,4 +1,4 @@
-#include "sweep_decoding.h" // Header for sweep decoding functions
+#include "sweep_decoding.h" 
 
 int main(int argc, char *argv[])
 {
